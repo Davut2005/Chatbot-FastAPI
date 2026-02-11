@@ -1,8 +1,9 @@
 from fastapi import APIRouter
 from openai import OpenAI
 from core.config import settings
+import ollama
 
-client = OpenAI( settings.OPENAI_API_KEY )
+# client = OpenAI( api_key=settings.OPENAI_API_KEY )
 
 router = APIRouter(
     prefix="/chat",
@@ -10,15 +11,18 @@ router = APIRouter(
 )
 
 
-@router.post()
+@router.post("")
 async def createChat(msg: str):
+    print("req came", flush=True)
     
-    response = client.chat.completions.create(
-        model="gpt-4-turbo",
+    response = ollama.chat(
+        model="llama2",
         messages= [
             {"role": "system", "content": "You are QA expert. Answer the questions with code blocks where possible"},
             {"role": "user", "content": msg}
         ]
     )
 
-    return { "response": response.choices[0].message.content }
+    print(f"response: {response['message']['content']} ", flush=True)
+
+    return { "response": response["message"]["content"] }
