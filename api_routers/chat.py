@@ -23,6 +23,5 @@ async def createChat(msg: str):
         ]
     )
 
-    print(f"response: {response['message']['content']} ", flush=True)
 
     return { "response": response["message"]["content"] }
