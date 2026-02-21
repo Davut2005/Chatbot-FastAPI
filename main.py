@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-from api_routers import chat
+from api_routers import chat, upload
 
 app = FastAPI()
 
@@ -14,6 +14,7 @@ app.add_middleware(
 )
 
 app.include_router(chat.router)
+app.include_router(upload.router)
 
 if __name__ == "__main__":
     import uvicorn
