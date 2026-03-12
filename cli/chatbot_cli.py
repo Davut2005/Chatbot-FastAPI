@@ -1,6 +1,9 @@
-import ollama
+import openai
+from core.config import settings
 
 history = []
+
+client = openai.OpenAI( api_key=settings.OPENAI_API_KEY )
 
 while True:
     print("Ask something from DavutAI (press q or e to exit)")
@@ -19,8 +22,8 @@ while True:
 
     print( "Bot:  ", end="", flush=True )
 
-    response = ollama.chat(
-        model = "llama2",
+    response = client.chat.completions.create(
+        model = "gpt-4o-mini",
         messages = history,
         stream = True
     )
@@ -28,8 +31,8 @@ while True:
     bot_msg_response = ""
 
     for chunk in response:
-        bot_msg_response += chunk["message"]["content"]
-        print(chunk["message"]["content"] , end="", flush=True)
+        bot_msg_response += chunk.choices[0].message.content
+        print(chunk.choices[0].message.content , end="", flush=True)
     
     bot_message = {
         "role": "assistant",

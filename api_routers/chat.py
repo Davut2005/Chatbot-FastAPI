@@ -3,7 +3,7 @@ from openai import OpenAI
 from core.config import settings
 import ollama
 
-# client = OpenAI( api_key=settings.OPENAI_API_KEY )
+client = OpenAI( api_key=settings.OPENAI_API_KEY )
 
 router = APIRouter(
     prefix="/chat",
@@ -13,10 +13,9 @@ router = APIRouter(
 
 @router.post("")
 async def createChat(msg: str):
-    print("req came", flush=True)
     
-    response = ollama.chat(
-        model="llama2",
+    response = client.chat.completions.create(
+        model="gpt-4o-mini",
         messages= [
             {"role": "system", "content": "You are QA expert. Answer the questions with code blocks where possible"},
             {"role": "user", "content": msg}
@@ -24,4 +23,4 @@ async def createChat(msg: str):
     )
 
 
-    return { "response": response["message"]["content"] }
+    return { "response": response.choices[0].message.content}
